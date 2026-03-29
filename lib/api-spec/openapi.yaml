@@ -1,0 +1,194 @@
+openapi: 3.1.0
+info:
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: posts
+    description: Dev posts operations
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /posts:
+    get:
+      operationId: getPosts
+      tags: [posts]
+      summary: Get all dev posts
+      responses:
+        "200":
+          description: List of posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Post"
+    post:
+      operationId: createPost
+      tags: [posts]
+      summary: Create a dev post (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePostInput"
+      responses:
+        "201":
+          description: Created post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /posts/{id}:
+    delete:
+      operationId: deletePost
+      tags: [posts]
+      summary: Delete a dev post (admin)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /admin/verify:
+    post:
+      operationId: verifyAdmin
+      tags: [posts]
+      summary: Verify admin password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminVerifyInput"
+      responses:
+        "200":
+          description: Verified
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "401":
+          description: Wrong password
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+          enum: [text, image, video, script]
+        title:
+          type: string
+        content:
+          type: string
+        mediaUrl:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+      required:
+        - id
+        - type
+        - title
+        - content
+        - createdAt
+    CreatePostInput:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [text, image, video, script]
+        title:
+          type: string
+        content:
+          type: string
+        mediaUrl:
+          type: string
+          nullable: true
+        adminPassword:
+          type: string
+      required:
+        - type
+        - title
+        - content
+        - adminPassword
+    AdminVerifyInput:
+      type: object
+      properties:
+        password:
+          type: string
+      required:
+        - password
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+      required:
+        - success
+        - message
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
