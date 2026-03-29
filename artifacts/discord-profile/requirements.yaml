@@ -1,0 +1,18 @@
+packages:
+  "framer-motion": "For fluid layout animations and page transitions"
+  "react-syntax-highlighter": "For beautiful script post syntax highlighting"
+  "@types/react-syntax-highlighter": "TypeScript types for syntax highlighter"
+  "date-fns": "For elegant timestamp formatting"
+  "clsx": "For conditional class names"
+  "tailwind-merge": "For merging tailwind classes safely"
+  "lucide-react": "For crisp UI icons"
+
+images:
+  - path: "artifacts/discord-profile/public/images/hero-bg.png"
+    description: "A dark, moody, abstract gradient mesh in Discord blurple and deep dark gray colors, subtle and clean, modern web aesthetic"
+    aspect_ratio: "16:9"
+
+notes:
+  - "App integrates with Lanyard REST API (https://api.lanyard.rest/v1/users/{id})"
+  - "API client hooks are imported from @workspace/api-client-react"
+  - "Theme automatically respects prefers-color-scheme using native CSS media queries instead of a manual toggle"
